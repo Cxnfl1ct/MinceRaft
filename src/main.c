@@ -17,6 +17,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 Model niko;
 Model grass;
 
+Mesh grass_;
+
 Texture2D niko_texture;
 Texture2D grass_texture;
 
@@ -30,6 +32,23 @@ Camera camera = { 0 };
 float rotation = 0;
 
 bool pause;
+
+typedef struct {
+	Vector3 pos;
+
+	float pitch;
+	float yaw;
+
+	float hp;
+	float hunger;
+
+	unsigned short inventory[3];
+	bool dead;
+
+	char name[17];
+} Player;
+
+Player players[5];
 
 void InitGame();
 void EndGame();
@@ -65,7 +84,7 @@ int main() {
 }
 
 void InitGame() {
-	Mesh grass_ = GenMeshPlane(1.0f, 1.0f, 1, 2);
+	grass_ = GenMeshCube(1.0f, 1.0f, 1.0f);
 
 	SearchAndSetResourceDir("resources");
 
@@ -85,8 +104,6 @@ void InitGame() {
 
 	SetMaterialTexture(&niko.materials[0], MATERIAL_MAP_DIFFUSE, niko_texture);
 	SetMaterialTexture(&grass.materials[0], MATERIAL_MAP_DIFFUSE, grass_texture);
-
-	UnloadMesh(grass_);
 
 	InitAudioDevice();
 
@@ -115,6 +132,8 @@ void EndGame() {
 
 	UnloadModel(niko);
 	UnloadModel(grass);
+
+//	UnloadMesh(grass_);
 
 	UnloadMusicStream(bg);
 
@@ -185,8 +204,7 @@ void DrawMap() {
 	for (i=0; i<100; i++) {	
 		for (j=0; j<100; j++) {
 			k += 1.0f;
-			DrawModel(grass, (Vector3) {k, 0.0f, l}, 1.0f, WHITE);
-			DrawPlane((Vector3) {k, 0.0f, l}, (Vector2) {1.0f, 1.0f}, (Color) {(float) i*j, (float) i*j, (float) i*j, 255});
+			DrawModel(grass, (Vector3) {k, -0.5f, l}, 1.0f, WHITE);
 		}
 
 		k = -50.0f;
@@ -194,7 +212,13 @@ void DrawMap() {
 	}
 }
 
+void DrawPlayer(Player *player) {
+	DrawModelEx(niko, player.pos, (Vector3) {player.pitch, player.yaw, 0.0f}, 0.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
+}
+
 void DrawObjects() {
+	DrawModelEx(niko, (Vector3) {0.0f, 0.0f, 0.0f}, (Vector3) {0, 0, rotation}, 0.0f, (Vector3) {1.2f, 1.2f, 1.2f}, WHITE);
+
 	DrawModelEx(niko, (Vector3) {0.0f, 0.0f, 0.0f}, (Vector3) {0, 0, rotation}, 0.0f, (Vector3) {1.2f, 1.2f, 1.2f}, WHITE);
 }
 
