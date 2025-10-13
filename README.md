@@ -15,6 +15,9 @@ MinceRaft supports the main 3 desktop platforms:
 * Linux
 * MacOS
 
+## Current bugs
+* Nametags on players will be shown even if you're not looking at them
+
 # VSCode Users (all platforms)
 *Note* You must have a compiler toolchain installed in addition to vscode.
 
