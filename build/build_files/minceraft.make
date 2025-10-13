@@ -130,6 +130,8 @@ GENERATED += $(OBJDIR)/textures.o
 OBJECTS += $(OBJDIR)/textures.o
 GENERATED += $(OBJDIR)/player_lst.o
 OBJECTS += $(OBJDIR)/player_lst.o
+GENERATED += $(OBJDIR)/gui.o
+OBJECTS += $(OBJDIR)/gui.o
 
 # Rules
 # #############################################
@@ -210,6 +212,10 @@ $(OBJDIR)/player_lst.o: ../../src/player_lst.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"	
 
 $(OBJDIR)/ext.o: ../../src/ext.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+
+$(OBJDIR)/gui.o: ../../src/gui.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
