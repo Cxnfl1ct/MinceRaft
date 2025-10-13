@@ -42,8 +42,8 @@ endef
 
 ifeq ($(config),debug_x64)
 TARGETDIR = ../../bin/Debug
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/x64/Debug/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/x64/Debug/minceraft
 DEFINES += -DDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Wshadow -g -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Wshadow -g -std=c++17
@@ -53,8 +53,8 @@ ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),debug_x86)
 TARGETDIR = ../../bin/Debug
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/x86/Debug/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/x86/Debug/minceraft
 DEFINES += -DDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m32 -Wshadow -g -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m32 -Wshadow -g -std=c++17
@@ -64,8 +64,8 @@ ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib32 -m32
 
 else ifeq ($(config),debug_arm64)
 TARGETDIR = ../../bin/Debug
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/ARM64/Debug/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/ARM64/Debug/minceraft
 DEFINES += -DDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Wshadow -g -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Wshadow -g -std=c++17
@@ -75,8 +75,8 @@ ALL_LDFLAGS += $(LDFLAGS)
 
 else ifeq ($(config),release_x64)
 TARGETDIR = ../../bin/Release
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/x64/Release/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/x64/Release/minceraft
 DEFINES += -DNDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Wshadow -O2 -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Wshadow -O2 -std=c++17
@@ -86,8 +86,8 @@ ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),release_x86)
 TARGETDIR = ../../bin/Release
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/x86/Release/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/x86/Release/minceraft
 DEFINES += -DNDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m32 -Wshadow -O2 -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m32 -Wshadow -O2 -std=c++17
@@ -97,8 +97,8 @@ ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib32 -m32 -s
 
 else ifeq ($(config),release_arm64)
 TARGETDIR = ../../bin/Release
-TARGET = $(TARGETDIR)/raylib-quickstart
-OBJDIR = obj/ARM64/Release/raylib-quickstart
+TARGET = $(TARGETDIR)/minceraft
+OBJDIR = obj/ARM64/Release/minceraft
 DEFINES += -DNDEBUG -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -D_GLFW_X11 -D_GNU_SOURCE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Wshadow -O2 -std=c17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Wshadow -O2 -std=c++17
@@ -139,7 +139,7 @@ all: $(TARGET)
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking raylib-quickstart
+	@echo Linking minceraft
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -160,7 +160,7 @@ else
 endif
 
 clean:
-	@echo Cleaning raylib-quickstart
+	@echo Cleaning minceraft
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)

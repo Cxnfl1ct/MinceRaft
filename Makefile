@@ -9,43 +9,43 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug_x64)
-  raylib_quickstart_config = debug_x64
+  minceraft_config = debug_x64
   raylib_config = debug_x64
 
 else ifeq ($(config),debug_x86)
-  raylib_quickstart_config = debug_x86
+  minceraft_config = debug_x86
   raylib_config = debug_x86
 
 else ifeq ($(config),debug_arm64)
-  raylib_quickstart_config = debug_arm64
+  minceraft_config = debug_arm64
   raylib_config = debug_arm64
 
 else ifeq ($(config),release_x64)
-  raylib_quickstart_config = release_x64
+  minceraft_config = release_x64
   raylib_config = release_x64
 
 else ifeq ($(config),release_x86)
-  raylib_quickstart_config = release_x86
+  minceraft_config = release_x86
   raylib_config = release_x86
 
 else ifeq ($(config),release_arm64)
-  raylib_quickstart_config = release_arm64
+  minceraft_config = release_arm64
   raylib_config = release_arm64
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := raylib-quickstart raylib
+PROJECTS := minceraft raylib
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-raylib-quickstart: raylib
-ifneq (,$(raylib_quickstart_config))
-	@echo "==== Building raylib-quickstart ($(raylib_quickstart_config)) ===="
-	@${MAKE} --no-print-directory -C build/build_files -f raylib-quickstart.make config=$(raylib_quickstart_config)
+minceraft: raylib
+ifneq (,$(minceraft_config))
+	@echo "==== Building minceraft ($(minceraft_config)) ===="
+	@${MAKE} --no-print-directory -C build/build_files -f minceraft.make config=$(minceraft_config)
 endif
 
 raylib:
@@ -55,7 +55,7 @@ ifneq (,$(raylib_config))
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C build/build_files -f raylib-quickstart.make clean
+	@${MAKE} --no-print-directory -C build/build_files -f minceraft.make clean
 	@${MAKE} --no-print-directory -C build/build_files -f raylib.make clean
 
 help:
@@ -72,7 +72,7 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   raylib-quickstart"
+	@echo "   minceraft"
 	@echo "   raylib"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"
