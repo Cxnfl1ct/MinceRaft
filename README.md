@@ -4,6 +4,8 @@ MinceRaft is a Minecraft clone written in the pure C.
 > Be noted this project is still being worked on
 > and can have any sort of glitches and/or misbehaviors.
 
+> nikka oneshot is the best :fire:
+
 The final objectives of this project are:
 * Supporting 1.7.10 multiplayer protocol
 * Supporting 1.7.10 worlds
