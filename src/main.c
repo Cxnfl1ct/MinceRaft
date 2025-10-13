@@ -309,7 +309,7 @@ void DrawOverlay() {
 
 void DrawPauseOverlay() {
 	DrawRectangle(0, 0, sw, sh, (Color) {0, 0, 0, 127} );
-	DrawMinecraftText(NOFONT, "PAUSED", COORD_HOME, 80, TXT_SP, WHITE, true, 1, 1);
+	DrawMinecraftText(NOFONT, "Game menu", 0, 150, 20, TXT_SP, WHITE, true, 1, 0);
 }
 
 void DrawDeadOverlay() {
