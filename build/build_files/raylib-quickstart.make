@@ -120,6 +120,16 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/ext.o
+OBJECTS += $(OBJDIR)/ext.o
+GENERATED += $(OBJDIR)/player.o
+OBJECTS += $(OBJDIR)/player.o
+GENERATED += $(OBJDIR)/models.o
+OBJECTS += $(OBJDIR)/models.o
+GENERATED += $(OBJDIR)/textures.o
+OBJECTS += $(OBJDIR)/textures.o
+GENERATED += $(OBJDIR)/player_lst.o
+OBJECTS += $(OBJDIR)/player_lst.o
 
 # Rules
 # #############################################
@@ -182,6 +192,26 @@ endif
 
 # File Rules
 # #############################################
+
+$(OBJDIR)/models.o: ../../src/models.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+
+$(OBJDIR)/textures.o: ../../src/textures.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+
+$(OBJDIR)/player.o: ../../src/player.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+
+$(OBJDIR)/player_lst.o: ../../src/player_lst.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"	
+
+$(OBJDIR)/ext.o: ../../src/ext.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 $(OBJDIR)/main.o: ../../src/main.c
 	@echo "$(notdir $<)"

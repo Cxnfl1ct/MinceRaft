@@ -7,20 +7,26 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 */
 
-#include "raylib.h"
+#include <stdio.h>
 
+#include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
-#include <stdio.h>
-#include <stdint.h>
+#include "ext.h"
+#include "config.h"
+#include "keywords.h"
+#include "player.h"
 
-Model niko;
-Model grass;
+Model models[MAX_MODELS];
+unsigned int models_cnt = 0;
 
-Mesh grass_;
+Texture2D textures[MAX_TEXTURES];
+unsigned int tex_cnt = 0;
 
-Texture2D niko_texture;
-Texture2D grass_texture;
+Player players[MAX_PLAYERS];
+unsigned int player_cnt = 0;
+
+Mesh grass_msh;
 
 Music bg;
 
@@ -33,45 +39,37 @@ float rotation = 0;
 
 bool pause;
 
-typedef struct {
-	Vector3 pos;
+int sw, sh;
 
-	float pitch;
-	float yaw;
+extern Font dummy;
 
-	float hp;
-	float hunger;
-
-	unsigned short inventory[3];
-	bool dead;
-
-	char name[17];
-} Player;
-
-Player players[5];
+#include "models.h"
+#include "textures.h"
+#include "player_lst.h"
 
 void InitGame();
+
+void TestStub();
+
 void EndGame();
-void UpdateGame();
-void DrawGame();
+
 void UpdateDrawFrame();
 
-void InitCamera();
+void UpdateGame();
+void DrawGame();
 
+void ProcessInput();
+
+void DrawMap();
 void DrawBG();
 void DrawObjects();
 void DrawOverlay();
 void DrawPauseOverlay();
 
-void ProcessInput();
-
-void DrawMinecraftText(const char *text, int posX, int posY, int fontSize, Color color, bool shadow);
-
 int main() {
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
 	// Create the window and OpenGL context
-	InitWindow(1280, 800, "MinceRaft - OneShot Niko");
 	InitGame();
 
 	while (!WindowShouldClose()) {
@@ -84,17 +82,36 @@ int main() {
 }
 
 void InitGame() {
-	grass_ = GenMeshCube(1.0f, 1.0f, 1.0f);
+	Model niko_mod, grass_mod;
+	Texture2D niko_tex, grass_tex;
+//	Mesh grass_msh;
+
+	// Initialize game runtime
+
+	InitWindow(1280, 800, "MinceRaft - OneShot Niko");
+	SetTargetFPS(60);
+
+	sw = GetScreenWidth();
+	sh = GetScreenHeight();
 
 	SearchAndSetResourceDir("resources");
 
-	niko = LoadModel("niko.obj");
-	niko_texture = LoadTexture("niko.png");
-	grass_texture = LoadTexture("grass.png");
+	// Initialize audio
 
-	grass = LoadModelFromMesh(grass_);
+	InitAudioDevice();
 
-	if (!IsModelValid(niko)) {
+	if (!IsAudioDeviceReady()) {
+		TraceLog(0, "Initializing audio device failed!");
+	}
+
+	niko_mod = LoadModel("niko.obj");
+	niko_tex = LoadTexture("niko.png");
+	grass_tex = LoadTexture("grass.png");
+
+	grass_msh = GenMeshCube(1.0f, 1.0f, 1.0f);
+	grass_mod = LoadModelFromMesh(grass_msh);
+
+	if (!IsModelValid(niko_mod)) {
 		TraceLog(0, "Failed to load <niko.obj>!");
 	}
 
@@ -102,14 +119,20 @@ void InitGame() {
 		TraceLog(0, "Failed to load <bg.mp3>!");
 	}
 
-	SetMaterialTexture(&niko.materials[0], MATERIAL_MAP_DIFFUSE, niko_texture);
-	SetMaterialTexture(&grass.materials[0], MATERIAL_MAP_DIFFUSE, grass_texture);
+	// Append models to global model storage
 
-	InitAudioDevice();
+	ModelAppend(niko_mod);
+	ModelAppend(grass_mod);
 
-	if (!IsAudioDeviceReady()) {
-		TraceLog(0, "Initializing audio device failed!");
-	}
+	TextureAppend(niko_tex);
+	TextureAppend(grass_tex);
+
+	// Apply textures to models
+
+	SetMaterialTexture(&models[0].materials[0], MATERIAL_MAP_DIFFUSE, textures[0]);
+	SetMaterialTexture(&models[1].materials[0], MATERIAL_MAP_DIFFUSE, textures[1]);
+
+	// Initialize audio
 
 	bg = LoadMusicStream("bg.mp3");
 
@@ -118,28 +141,107 @@ void InitGame() {
 
 	pause = false;
 
-	DisableCursor();
-	SetTargetFPS(60);
+	// Initialize viewport
 
-	InitCamera();
+	DisableCursor();
+
+	InitCamera(&camera);
+
+	TestStub();
+}
+
+void TestStub() {
+	Player test;
+
+	// Initialize player 'test'
+	test.pos = (Vector3) {0.0f, 0.0f, 0.0f};
+	test.pitch = 0.0f;
+	test.yaw = 0.0f;
+	test.hp = 20.0f;
+	test.hunger = 20.0f;
+	test.dead = false;
+	TextCopy(test.name, "nikoOneshot123_");
+
+	PlayerAppend(test);
 }
 
 void EndGame() {
 	StopMusicStream(bg);
 
-	UnloadTexture(niko_texture);
-	UnloadTexture(grass_texture);
-
-	UnloadModel(niko);
-	UnloadModel(grass);
-
-//	UnloadMesh(grass_);
+	ModelRemoveAll();
+	TextureRemoveAll();
 
 	UnloadMusicStream(bg);
 
 	CloseAudioDevice();
 
 	CloseWindow();
+}
+
+void UpdateDrawFrame() {
+	UpdateGame();
+	DrawGame();
+}
+
+void DrawGame() {
+	BeginDrawing();
+
+	DrawBG();
+
+	BeginMode3D(camera);
+
+	DrawMap();
+	DrawObjects();
+
+	EndMode3D();
+
+	DrawOverlay();
+
+	if (pause)
+		DrawPauseOverlay();
+
+	EndDrawing();
+}
+
+void UpdateGame() {
+	if (IsKeyReleased('P') ) {
+		pause = !pause;
+
+		if (pause) {
+			PauseMusicStream(bg);
+			EnableCursor();
+		} else {
+			ResumeMusicStream(bg);
+			DisableCursor();
+		}
+	}
+
+	if (!pause) {
+		ProcessInput();
+
+		UpdateMusicStream(bg);
+
+		UpdateCameraPro(&camera, (Vector3){
+                	(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f -      // Move forward-backward
+                	(IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f,
+                	(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f -   // Move right-left
+                	(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f,
+                	0.0f                                                // Move up-down
+            	},
+            	(Vector3){
+                	GetMouseDelta().x*0.05f,                            // Rotation: yaw
+                	GetMouseDelta().y*0.05f,                            // Rotation: pitch
+                	0.0f                                                // Rotation: roll
+            	},
+	    	0.0f);
+	}
+
+	if (IsMusicStreamPlaying(bg) )
+		SetMasterVolume( (float) volume * playSound );
+
+	if (!IsMusicStreamPlaying(bg) ) {
+		PlayMusicStream(bg);
+	}
 }
 
 void ProcessInput() {
@@ -157,137 +259,60 @@ void ProcessInput() {
 	}
 
 	if (IsKeyReleased('R') )
-		InitCamera();
+		InitCamera(&camera);
 }
 
-void UpdateGame() {
-	if (IsKeyReleased('P') ) {
-		pause = !pause;
-	
-		if (pause) {
-			PauseMusicStream(bg);
-			EnableCursor();
-		} else {
-			ResumeMusicStream(bg);
-			DisableCursor();
-		}
-	}
-
-	if (!pause) {
-		ProcessInput();
-
-		UpdateMusicStream(bg);
-
-		UpdateCamera(&camera, CAMERA_FIRST_PERSON);
-	}
-
-	if (IsMusicStreamPlaying(bg) )
-		SetMasterVolume( (float) volume * playSound );
-
-	if (!IsMusicStreamPlaying(bg) ) {
-		PlayMusicStream(bg);
-	}
-}
+// Draw
 
 void DrawBG() {
 	ClearBackground((Color) {170, 225, 255, 255});
-	DrawGrid(50, 1.0f);
+	DrawGrid(50, 1);
 }
 
 void DrawMap() {
 	int i, j;
 	float k, l;
 
-	k = -50.0f;
-	l = -50.0f;
+	k = -50;
+	l = -50;
 
 	for (i=0; i<100; i++) {	
 		for (j=0; j<100; j++) {
-			k += 1.0f;
-			DrawModel(grass, (Vector3) {k, -0.5f, l}, 1.0f, WHITE);
+			k += 1;
+			DrawModel(grass, (Vector3) {k, -0.5f, l}, 1, WHITE);
 		}
 
-		k = -50.0f;
-		l += 1.0f;
+		k = -50;
+		l += 1;
 	}
 }
 
-void DrawPlayer(Player *player) {
-	DrawModelEx(niko, player.pos, (Vector3) {player.pitch, player.yaw, 0.0f}, 0.0f, (Vector3) {1.0f, 1.0f, 1.0f}, WHITE);
-}
-
 void DrawObjects() {
-	DrawModelEx(niko, (Vector3) {0.0f, 0.0f, 0.0f}, (Vector3) {0, 0, rotation}, 0.0f, (Vector3) {1.2f, 1.2f, 1.2f}, WHITE);
-
-	DrawModelEx(niko, (Vector3) {0.0f, 0.0f, 0.0f}, (Vector3) {0, 0, rotation}, 0.0f, (Vector3) {1.2f, 1.2f, 1.2f}, WHITE);
+	DrawPlayer(&players[0]);
+//	DrawModelEx(niko, (Vector3) {0.0f, 0.0f, 0.0f}, (Vector3) {0, 0, rotation}, 0.0f, (Vector3) {1.2f, 1.2f, 1.2f}, WHITE);
 }
 
 void DrawOverlay() {
 	char debug_txt[256];
 	char volume_txt[64];
 
-	int sw = GetScreenWidth();
-	int sh = GetScreenHeight();
-
 	sprintf(debug_txt, "%dFPS - Frame render took %.3fs - Program Uptime: %.f", GetFPS(), GetFrameTime(), GetTime() );
 	sprintf(volume_txt, "Current volume: %.f%%", volume * 100);
 
-	DrawMinecraftText("TEST - OneShot Niko", 5, 5, 20, WHITE, true);
-	DrawMinecraftText(debug_txt, 5, sh - 20, 20, WHITE, true);
-	DrawMinecraftText(volume_txt, sw - MeasureText(volume_txt, 20) - 5, 5, 20, WHITE, true);
+	DrawMinecraftText(NOFONT, BRAND_TXT, 5, 5, 20, TXT_SP, WHITE, true, 0, 0);
+	DrawMinecraftText(NOFONT, debug_txt, 5, 0, 20, TXT_SP, WHITE, true, 0, 2);
+	DrawMinecraftText(NOFONT, volume_txt, -5, 5, 20, TXT_SP, WHITE, true, 2, 0);
 
 	if (!playSound)
-		DrawMinecraftText("MUTED", sw - MeasureText("MUTED", 20) - 5, 30, 20, WHITE, true);
+		DrawMinecraftText(NOFONT, "MUTED", -5, 30, 20, TXT_SP, WHITE, true, 1, 0);
 }
 
 void DrawPauseOverlay() {
-	int sw = GetScreenWidth();
-	int sh = GetScreenHeight();
-
 	DrawRectangle(0, 0, sw, sh, (Color) {0, 0, 0, 127} );
-	DrawMinecraftText("PAUSED", sw / 2 - MeasureText("PAUSED", 80 / 2), sh / 2 - MeasureText("PAUSED", 80) / 2, 80, WHITE, true);
+	DrawMinecraftText(NOFONT, "PAUSED", COORD_HOME, 80, TXT_SP, WHITE, true, 1, 1);
 }
 
-void DrawGame() {
-	BeginDrawing();
-
-	DrawBG();
-	
-	BeginMode3D(camera);
-
-	DrawMap();
-	DrawObjects();
-
-	EndMode3D();
-
-	DrawOverlay();
-	
-	if (pause)
-		DrawPauseOverlay();
-
-	EndDrawing();
-}
-
-void UpdateDrawFrame() {
-	UpdateGame();
-	DrawGame();
-}
-
-void InitCamera() {
-	camera.position = (Vector3){5.0f, 1.0f, 5.0f};
-	camera.target = (Vector3){0.0f, 0.0f, 0.0f};
-	camera.up = (Vector3){0.0f, 1.0f, 0.0f};
-	camera.fovy = 45.0f;
-	camera.projection = CAMERA_PERSPECTIVE;
-}
-
-void DrawMinecraftText(const char *text, int posX, int posY, int fontSize, Color color, bool shadow) {
-	int offset = fontSize / 10;
-
-	Color color_shadow = {color.r / 4, color.g / 4, color.b / 4, color.a};
-
-	if (shadow)
-		DrawText(text, posX + offset, posY + offset, fontSize, color_shadow);
-
-	DrawText(text, posX, posY, fontSize, color);
+void DrawDeadOverlay() {
+	DrawRectangle(0, 0, sw, sh, (Color) {127, 0, 0, 127} );
+	DrawMinecraftText(NOFONT, "You died!", COORD_HOME, 60, TXT_SP, WHITE, true, 1, 1);
 }

@@ -1,6 +1,11 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
+#include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
 typedef struct {
 	Vector3 pos;
 
@@ -15,8 +20,9 @@ typedef struct {
 	bool dead;
 
 	char name[17];
-}
+} Player;
 
-Player newPlayer(Vector3 pos, char name[17]);
+extern Player NewPlayer(Vector3 pos, char name[17]);
+extern void DrawPlayer(Player *player);
 
 #endif
