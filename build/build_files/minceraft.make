@@ -120,16 +120,25 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/main.o
+
 GENERATED += $(OBJDIR)/ext.o
 OBJECTS += $(OBJDIR)/ext.o
-GENERATED += $(OBJDIR)/player.o
-OBJECTS += $(OBJDIR)/player.o
-GENERATED += $(OBJDIR)/models.o
-OBJECTS += $(OBJDIR)/models.o
-GENERATED += $(OBJDIR)/textures.o
-OBJECTS += $(OBJDIR)/textures.o
-GENERATED += $(OBJDIR)/player_lst.o
-OBJECTS += $(OBJDIR)/player_lst.o
+
+GENERATED += $(OBJDIR)/player/player.o
+OBJECTS += $(OBJDIR)/player/player.o
+GENERATED += $(OBJDIR)/player/player_lst.o
+OBJECTS += $(OBJDIR)/player/player_lst.o
+
+GENERATED += $(OBJDIR)/render/models.o
+OBJECTS += $(OBJDIR)/render/models.o
+GENERATED += $(OBJDIR)/render/textures.o
+OBJECTS += $(OBJDIR)/render/textures.o
+
+GENERATED += $(OBJDIR)/world/blocks.o
+OBJECTS += $(OBJDIR)/world/blocks.o
+GENERATED += $(OBJDIR)/world/world.o
+OBJECTS += $(OBJDIR)/world/world.o
+
 GENERATED += $(OBJDIR)/gui.o
 OBJECTS += $(OBJDIR)/gui.o
 
@@ -195,21 +204,29 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/models.o: ../../src/models.c
+$(OBJDIR)/render/models.o: ../../src/render/models.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
-$(OBJDIR)/textures.o: ../../src/textures.c
+$(OBJDIR)/render/textures.o: ../../src/render/textures.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
-$(OBJDIR)/player.o: ../../src/player.c
+$(OBJDIR)/player/player.o: ../../src/player/player.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
-$(OBJDIR)/player_lst.o: ../../src/player_lst.c
+$(OBJDIR)/player/player_lst.o: ../../src/player/player_lst.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"	
+
+$(OBJDIR)/world/world.o: ../../src/world/world.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+
+$(OBJDIR)/world/blocks.o: ../../src/world/blocks.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 $(OBJDIR)/ext.o: ../../src/ext.c
 	@echo "$(notdir $<)"

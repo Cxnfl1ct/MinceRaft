@@ -15,7 +15,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "ext.h"
 #include "config.h"
 #include "keywords.h"
-#include "player.h"
+#include "player/player.h"
 
 Model models[MAX_MODELS];
 unsigned int models_cnt = 0;
@@ -43,9 +43,9 @@ int sw, sh;
 
 extern Font dummy;
 
-#include "models.h"
-#include "textures.h"
-#include "player_lst.h"
+#include "render/models.h"
+#include "render/textures.h"
+#include "player/player_lst.h"
 
 void InitGame();
 

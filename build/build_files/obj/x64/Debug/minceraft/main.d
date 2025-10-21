@@ -17,7 +17,7 @@ obj/x64/Debug/minceraft/main.o: ../../src/main.c \
  /usr/include/bits/floatn-common.h ../external/raylib-master/src/raylib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdbool.h \
  ../../include/resource_dir.h ../../src/ext.h ../../src/config.h \
- ../../src/keywords.h ../../src/player.h /usr/include/stdlib.h \
+ ../../src/keywords.h ../../src/player/player.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
  /usr/include/sys/types.h /usr/include/bits/types/clock_t.h \
@@ -40,8 +40,9 @@ obj/x64/Debug/minceraft/main.o: ../../src/main.c \
  /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls-macros.h \
  /usr/include/bits/mathcalls-helper-functions.h \
  /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
- /usr/include/bits/iscanonical.h ../../src/models.h ../../src/textures.h \
- ../../src/player_lst.h
+ /usr/include/bits/iscanonical.h ../../src/render/models.h \
+ ../../src/config.h ../../src/render/textures.h \
+ ../../src/player/player_lst.h ../../src/player/player.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
@@ -74,7 +75,7 @@ obj/x64/Debug/minceraft/main.o: ../../src/main.c \
 ../../src/ext.h:
 ../../src/config.h:
 ../../src/keywords.h:
-../../src/player.h:
+../../src/player/player.h:
 /usr/include/stdlib.h:
 /usr/include/bits/waitflags.h:
 /usr/include/bits/waitstatus.h:
@@ -116,6 +117,8 @@ obj/x64/Debug/minceraft/main.o: ../../src/main.c \
 /usr/include/bits/mathcalls.h:
 /usr/include/bits/mathcalls-narrow.h:
 /usr/include/bits/iscanonical.h:
-../../src/models.h:
-../../src/textures.h:
-../../src/player_lst.h:
+../../src/render/models.h:
+../../src/config.h:
+../../src/render/textures.h:
+../../src/player/player_lst.h:
+../../src/player/player.h:
