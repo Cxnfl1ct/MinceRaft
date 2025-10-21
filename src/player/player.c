@@ -25,9 +25,9 @@ void DrawPlayer(Player *player) {
 
 	// Prepare variables
 
-	dx = fabs(camera.position.x - player->pos.x);
-	dy = fabs(camera.position.y - player->pos.y);
-	dz = fabs(camera.position.z - player->pos.z);
+	dx = camera.position.x - player->pos.x;
+	dy = camera.position.y - player->pos.y;
+	dz = camera.position.z - player->pos.z;
 
 	name_dist = sqrt(dx*dx + dy*dy + dz*dz) / 8;
 	name_size = 15.0f / name_dist;

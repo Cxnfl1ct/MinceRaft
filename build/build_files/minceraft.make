@@ -139,8 +139,8 @@ OBJECTS += $(OBJDIR)/world/blocks.o
 GENERATED += $(OBJDIR)/world/world.o
 OBJECTS += $(OBJDIR)/world/world.o
 
-GENERATED += $(OBJDIR)/gui.o
-OBJECTS += $(OBJDIR)/gui.o
+GENERATED += $(OBJDIR)/gui/gui.o
+OBJECTS += $(OBJDIR)/gui/gui.o
 
 # Rules
 # #############################################
@@ -232,7 +232,7 @@ $(OBJDIR)/ext.o: ../../src/ext.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
-$(OBJDIR)/gui.o: ../../src/gui.c
+$(OBJDIR)/gui/gui.o: ../../src/gui/gui.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

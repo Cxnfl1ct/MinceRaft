@@ -4,6 +4,6 @@
 #include "raylib.h"
 
 #include "config.h"
-#include "../render/texturse.h"
+#include "../render/textures.h"
 
 #endif
