@@ -3,4 +3,7 @@
 
 #include "raylib.h"
 
+#include "config.h"
+#include "../render/texturse.h"
+
 #endif
