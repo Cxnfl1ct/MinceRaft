@@ -11,6 +11,12 @@ The final objectives of this project are:
 * Supporting 1.7.10 worlds
 * Supporting Microsoft auth systems
 
+TO-DO:
+* Implement proper world and player ticks
+* Implement support for on-memory world
+* Implement gravity and fall damage
+* Implement blocks and support for block models
+
 ## Supported Platforms
 MinceRaft supports the main 3 desktop platforms:
 * Windows
